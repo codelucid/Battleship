@@ -34,4 +34,49 @@ io.on('connection', socket => {
             break
         }
     }
+
+    // Tell the connecting client what player number they are
+    // "socket.emit" only communicates to the socket that connected
+    socket.emit('player-number', playerIndex)
+
+    console.log(`Player ${playerIndex} has connected`)
+
+    // Ignore player three
+    if (playerIndex === -1) return
+
+    connections[playerIndex] = false
+
+    // Tell everyone what player number just connected
+    // "socket.broadcast.emit" tells everybody else what you want to tell them
+    // Send the topic/title of "player-connection" with the data of playerIndex
+    socket.broadcast.emit('player-connection', playerIndex)
+
+    // Handle disconnect
+    socket.on('disconnect', () => {
+        console.log(`Player ${playerIndex} disconnected`)
+        connections[playerIndex] = null
+        // Tell everyone what player number disconnected
+        socket.broadcast.emit('player-connection', playerIndex)
+    })
+
+    // On ready
+    socket.on('player-ready', () => {
+        socket.broadcast.emit('enemy-ready', playerIndex)
+        connections[playerIndex] = true
+    })
+
+    // Check player connections
+    // Loop through the connections
+    // If connection is null, push into our players array- connection is false and ready is false
+    // Otherwise, if not null and there is a connection, push into players array- connection is true and 
+    // get ready status from actual connection  
+    // Then, emit that back to the socket that asked for it 
+    socket.on('check-players', () => {
+        const players = []
+        for (const i in connections) {
+            connections[i] === null ? players.push({connected: false, ready: false}) : 
+            players.push({connected: true, ready: connections[i]})
+        }
+        socket.emit('check-players', players)
+    })
 })

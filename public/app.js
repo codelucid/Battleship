@@ -1,29 +1,117 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const userGrid = document.querySelector('.grid-user')
-    const computerGrid = document.querySelector('.grid-computer')
-    const displayGrid = document.querySelector('.grid-display')
-    const ships = document.querySelectorAll('.ship')
-    const destroyer = document.querySelector('.destroyer-container')
-    const cruiser = document.querySelector('.cruiser-container')
-    const carrier = document.querySelector('.carrier-container')
-    const submarine = document.querySelector('.submarine-container')
-    const battleship = document.querySelector('.battleship-container')
-    const startButton = document.querySelector('#start')
-    const rotateButton = document.querySelector('#rotate')
-    const turnDisplay = document.querySelector('#whose-go')
-    const infoDisplay = document.querySelector('#info')
+    const userGrid = document.querySelector('.grid-user');
+    const computerGrid = document.querySelector('.grid-computer');
+    const displayGrid = document.querySelector('.grid-display');
+    const ships = document.querySelectorAll('.ship');
+    const destroyer = document.querySelector('.destroyer-container');
+    const cruiser = document.querySelector('.cruiser-container');
+    const carrier = document.querySelector('.carrier-container');
+    const submarine = document.querySelector('.submarine-container');
+    const battleship = document.querySelector('.battleship-container');
+    const startButton = document.querySelector('#start');
+    const rotateButton = document.querySelector('#rotate');
+    const turnDisplay = document.querySelector('#whose-go');
+    const infoDisplay = document.querySelector('#info');
+    const singlePlayerButton = document.querySelector('#singlePlayerButton')
+    const multiPlayerButton = document.querySelector('#multiPlayerButton')
+    const userSquares = [];
+    const computerSquares = [];
 
-    const userSquares = []
-    const computerSquares = []
+    let isHorizontal = true;
 
-    let isHorizontal = true
+    const width = 10;
 
-    const width = 10
+    let isGameOver = false;
+    let currentPlayer = "user";
 
-    let isGameOver = false
-    let currentPlayer = "user"
+    let gameMode = "";
+    let playerNum = 0;
+    let ready = false;
+    let enemyReady = false;
+    let allShipsPlaced = false;
+    let shotFired = -1;
 
-    const socket = io();
+    // Select Player Mode
+    singlePlayerButton.addEventListener('click', startSinglePlayer)
+    multiPlayerButton.addEventListener('click', startMultiPlayer)
+
+    
+
+    // Multiplayer
+    function startMultiPlayer() {
+        gameMode = 'multiPlayer'
+
+        const socket = io();
+
+        // Get your player number
+        socket.on('player-number', num => {
+            if (num === -1) {
+                infoDisplay.innerHTML = "Sorry, the server is full"
+            } else {
+                playerNum = parseInt(num)
+                if(playerNum === 1) 
+                currentPlayer = "enemy"
+                console.log(playerNum)
+
+                // Get other player status
+                socket.emit('check-players')
+            }
+        })
+
+        // Another player has connected or disconnected
+        socket.on('player-connection', num => {
+            console.log(`Player number ${parseInt(num) + 1} has connected or disconnected`)
+            playerConnectedOrDisconnected(num)
+        })
+
+        // On enemy ready
+        // When we receive the "enemy-ready" message, we change enemyReady to true
+        // Then we pass that player's number through our playerReady function
+        socket.on('enemy-ready', num => {
+            enemyReady = true
+            playerReady(num)
+            if (ready) playGameMulti(socket)
+        })
+
+        // Check player status
+        socket.on('check-players', players => {
+            players.forEach((p, i) => {
+                if(p.connected) playerConnectedOrDisconnected(i)
+                if(p.ready) {
+                    playerReady(i)
+                    if(!i === playerNum) enemyReady = true
+                }
+            })
+        })
+
+        // Ready button click
+        startButton.addEventListener('click', () => {
+            if(allShipsPlaced) playGameMulti(socket)
+            else infoDisplay.innerHTML = "Please place all your ships"
+        })
+
+        // Get access to the P1 or P2 class, in the HTML
+        // We are going to get 0 or 1 from the index; hence, zero is P1 and one is P2- why we add 1 to index
+        function playerConnectedOrDisconnected(num) {
+            let player = `.p${parseInt(num) + 1}`
+            document.querySelector(`${player} .connected span`).classList.toggle('green')
+            // If the player connecting is us, change the fontweight to bold, so we know
+            if(parseInt(num) === playerNum) document.querySelector(player).style.fontWeight = 'bold'
+        }
+    }
+
+    // Single Player
+    function startSinglePlayer() {
+        gameMode = "singlePlayer"
+
+        generateShips(shipArray[0])
+        generateShips(shipArray[1])
+        generateShips(shipArray[2])
+        generateShips(shipArray[3])
+        generateShips(shipArray[4])
+
+        startButton.addEventListener('click', playGameSingle)
+    }
 
     // Create Board
     function createBoard(grid, squares) {
@@ -94,12 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         else generateShips(ship)
     }
-    generateShips(shipArray[0])
-    generateShips(shipArray[1])
-    generateShips(shipArray[2])
-    generateShips(shipArray[3])
-    generateShips(shipArray[4])
-
+    
     // Rotate button
     function rotate() {
         if (isHorizontal) {
@@ -191,16 +274,45 @@ document.addEventListener('DOMContentLoaded', () => {
         } else return
 
         displayGrid.removeChild(draggedShip)
-
+        // If the display grid doesn't hold any ships, change allShipsPlaced to true
+        // This means all the ships have been placed on the user's game board
+        if(!displayGrid.querySelector('.ship')) allShipsPlaced = true
     }
 
     function dragEnd() {
         console.log('dragend')
     }
 
-    // Game Logic
+    // Game Logic for MultiPlayer
+    function playGameMulti(socket) {
+        if(isGameOver) return
+        if(!ready) {
+            socket.emit('player-ready')
+            ready = true
+            playerReady(playerNum)
+        }
 
-    function playGame() {
+        if(enemyReady) {
+            if(currentPlayer === 'user') {
+                turnDisplay.innerHTML = 'Your turn'
+            }
+            if(currentPlayer === 'enemy') {
+                turnDisplay.innerHTML = "Enemy's turn"
+            }
+        }
+    }
+
+    // This is toggling the span from red to green
+    function playerReady(num) {
+        let player = `.p${parseInt(num) + 1}`
+        document.querySelector(`${player} .ready span`).classList.toggle('green')
+    }
+
+
+
+    // Game Logic for Single Player
+
+    function playGameSingle() {
         if (isGameOver) return
         if (currentPlayer === 'user') {
             turnDisplay.innerHTML = "Your turn"
@@ -214,7 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    startButton.addEventListener('click', playGame)
+   
 
     let destroyerCount = 0
     let submarineCount = 0
@@ -237,7 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         checkForWins()
         currentPlayer = 'computer'
-        playGame()
+        playGameSingle()
     }
 
     let cpuDestroyerCount = 0
@@ -314,7 +426,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function gameOver() {
         isGameOver = true
-        startButton.removeEventListener('click', playGame)
+        startButton.removeEventListener('click', playGameSingle)
     }
 
 })
