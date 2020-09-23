@@ -1,6 +1,6 @@
 # Battleship
 
-![GitHub license](https://img.shields.io/badge/Skill-HTML-brightgreen) ![GitHub license](https://img.shields.io/badge/Skill-CSS-blue) ![GitHub license](https://img.shields.io/badge/Skill-JavaScript-red) ![GitHub license](https://img.shields.io/badge/Skill-Node.js-orange) ![GitHub license](https://img.shields.io/badge/Skill-Socket.IO-brightblue) ![GitHub license](https://img.shields.io/badge/Skill-Express-green) ![GitHub license](https://img.shields.io/badge/Deploy-Heroku-purple)
+![GitHub license](https://img.shields.io/badge/Skill-HTML-brightgreen) ![GitHub license](https://img.shields.io/badge/Skill-CSS-blue) ![GitHub license](https://img.shields.io/badge/Skill-JavaScript-red) ![GitHub license](https://img.shields.io/badge/Skill-Node.js-orange) ![GitHub license](https://img.shields.io/badge/Skill-Socket.IO-brightgreen) ![GitHub license](https://img.shields.io/badge/Skill-Express-green) ![GitHub license](https://img.shields.io/badge/Deploy-Heroku-purple)
 
 ## Description  
 
