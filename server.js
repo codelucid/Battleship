@@ -79,4 +79,28 @@ io.on('connection', socket => {
         }
         socket.emit('check-players', players)
     })
+
+    // On fire received
+    socket.on('fire', id => {
+        console.log(`Shot fired from ${playerIndex}`, id)
+
+        // Emit the move to the other player
+        socket.broadcast.emit('fire', id)
+    })
+
+    // On fire reply
+    socket.on('fire-reply', square => {
+        console.log(square)
+
+        // Forward the reply to the other player
+        socket.broadcast.emit('fire-reply', square)
+    })
+
+    // Timeout Connection
+    // 10 minute limit per player
+    setTimeout(() => {
+        connections[playerIndex] = null
+        socket.emit('timeout')
+        socket.disconnect()
+    }, 600000) 
 })
