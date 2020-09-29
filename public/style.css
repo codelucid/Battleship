@@ -71,8 +71,33 @@ body {
     grid-template-columns: repeat(10, 4.6vmin);
 }
 
+.grid-computer > .taken {
+    background-color: hsl(200, 100%, 50%) !important;
+    border-radius: 0 !important;
+}
+
 .taken, .ship {
     background-color: hsl(0, 0%, 80%);
+}
+
+.taken.start.vertical {
+    border-top-left-radius: 50%;
+    border-top-right-radius: 50%;
+}
+
+.taken.end.vertical {
+    border-bottom-left-radius: 50%;
+    border-bottom-right-radius: 50%;
+}
+
+.taken.start.horizontal {
+    border-top-left-radius: 50%;
+    border-bottom-left-radius: 50%;
+}
+
+.taken.end.horizontal {
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
 }
 
 .grid-display {
