@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // We are going to get 0 or 1 from the index; hence, zero is P1 and one is P2- why we add 1 to index
         function playerConnectedOrDisconnected(num) {
             let player = `.p${parseInt(num) + 1}`
-            document.querySelector(`${player} .connected span`).classList.toggle('green')
+            document.querySelector(`${player} .connected`).classList.toggle('active')
             // If the player connecting is us, change the fontweight to bold, so we know
             if(parseInt(num) === playerNum) document.querySelector(player).style.fontWeight = 'bold'
         }
@@ -331,6 +331,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Game Logic for MultiPlayer
     function playGameMulti(socket) {
+        setupButtons.style.display = 'none'
         if(isGameOver) return
         if(!ready) {
             socket.emit('player-ready')
@@ -351,7 +352,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // This is toggling the span from red to green
     function playerReady(num) {
         let player = `.p${parseInt(num) + 1}`
-        document.querySelector(`${player} .ready span`).classList.toggle('green')
+        document.querySelector(`${player} .ready`).classList.toggle('active')
     }
 
 
