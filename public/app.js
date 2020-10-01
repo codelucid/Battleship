@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const rotateButton = document.querySelector('#rotate');
     const turnDisplay = document.querySelector('#whose-go');
     const infoDisplay = document.querySelector('#info');
+    const setupButtons = document.getElementById('setup-buttons');
     const userSquares = [];
     const computerSquares = [];
 
@@ -109,7 +110,10 @@ document.addEventListener('DOMContentLoaded', () => {
         socket.on('enemy-ready', num => {
             enemyReady = true
             playerReady(num)
-            if (ready) playGameMulti(socket)
+            if (ready) {
+                playGameMulti(socket)
+                setupButtons.style.display = 'none'
+            }
         })
 
         // Check player status
@@ -185,7 +189,10 @@ document.addEventListener('DOMContentLoaded', () => {
         generateShips(shipArray[3])
         generateShips(shipArray[4])
 
-        startButton.addEventListener('click', playGameSingle)
+        startButton.addEventListener('click', () => {
+            setupButtons.style.display = 'none'
+            playGameSingle()
+        })
     }
 
     // Create Board
@@ -403,7 +410,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function enemyGo(square) {
         if (gameMode === 'singlePlayer') square = Math.floor(Math.random() * userSquares.length)
         if (!userSquares[square].classList.contains('boom')) {
-            userSquares[square].classList.add('boom')
+            const hit = userSquares[square].classList.contains('taken')
+            userSquares[square].classList.add(hit ? 'boom' : 'miss')
             if (userSquares[square].classList.contains('destroyer')) cpuDestroyerCount++
             if (userSquares[square].classList.contains('submarine')) cpuSubmarineCount++
             if (userSquares[square].classList.contains('cruiser')) cpuCruiserCount++
