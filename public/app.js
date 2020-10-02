@@ -472,7 +472,7 @@ document.addEventListener('DOMContentLoaded', () => {
             gameOver()
         }
         if ((cpuDestroyerCount + cpuSubmarineCount + cpuCruiserCount + cpuBattleshipCount + cpuCarrierCount) === 50) {
-            infoDisplay.innerHTML = `${enemy.toUpperCase()} WINS`
+            infoDisplay.innerHTML = `THE ${enemy.toUpperCase()} WON!`
             gameOver()
         }
     }
