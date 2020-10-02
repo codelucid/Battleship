@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if(p.connected) playerConnectedOrDisconnected(i)
                 if(p.ready) {
                     playerReady(i)
-                    if(!i === playerNum) enemyReady = true
+                    if(i !== playerReady) enemyReady = true
                 }
             })
         })
@@ -370,7 +370,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (currentPlayer === 'enemy') {
             turnDisplay.innerHTML = "Computer's turn"
-            setTimeout (enemyGo, 1000)
+            setTimeout(enemyGo, 1000)
         }
     }
 
