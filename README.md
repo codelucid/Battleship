@@ -4,8 +4,10 @@
 
 ## Description  
 
-Battleship!  Think about your strategy and place your ships on the board.  When it is your turn, shoot torpedoes at your enemy's ships!  Exchange fire and have fun!  Be the first to sink your enemy's ship to win!!
+Battleship!  Think about your strategy and place your ships on the board.  When it is your turn, shoot torpedoes at your enemy's ships!  Exchange fire and have fun!  Be the first to sink your enemy's ships to win!!  
 
+This project was created, in three different YouTube videos, by kubowania, codeSTACKr, and WebDevSimplified.  It was a lot of fun working along with them.
+[Project on Github](https://github.com/kubowania/battleships "Project on Github")
 
 ## Table of Contents
 - Installation 
