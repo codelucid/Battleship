@@ -7,7 +7,7 @@
 Battleship!  Think about your strategy and place your ships on the board.  When it is your turn, shoot torpedoes at your enemy's ships!  Exchange fire and have fun!  Be the first to sink your enemy's ships to win!!  
 
 This project was created, in three different YouTube videos, by kubowania, codeSTACKr, and WebDevSimplified.  It was a lot of fun working along with them. (It is a little buggy)
-[Project on Github](https://github.com/kubowania/battleships "Project on Github")
+![Project on Github](https://github.com/kubowania/battleships "Project on Github")
 
 ## Table of Contents
 - Installation 
@@ -24,8 +24,8 @@ To install necessary dependencies, run the following command:
 
 ## Usage  
 
-This is what the user needs to know about using the repo:
-Contact Codelucid for details, but always pull first and commit often!  Enjoy using this application to easily connect with your friends.  
+Enjoy playing the game on Heroku:
+![Battleship](https://battleship-codelucid.herokuapp.com/ "Battleship")  
 
 ## License  
 
